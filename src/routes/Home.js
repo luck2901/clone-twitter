@@ -16,14 +16,21 @@ const Home = ({userObj}) =>{
     },[])
     const onSubmit = async(event) =>{
         event.preventDefault();
-        const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
-        const response = await fileRef.putString(attachment, "data_url");
-        // await dbService.collection("tweets").add({
-        //     tweet : tweet,
-        //     createdAt : Date.now(),
-        //     creatorId : userObj.uid,
-        // });
-        // setTweet("");
+        let attachmentUrl = "";
+        if(attachment != ""){
+            const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+            const response = await fileRef.putString(attachment, "data_url");
+            attachmentUrl = await response.ref.getDownloadURL();
+        }
+        const tweetObj = {
+            tweet : tweet,
+            createdAt : Date.now(),
+            creatorId : userObj.uid,
+            attachmentUrl,
+        }
+        await dbService.collection("tweets").add(tweetObj);
+        setTweet("");
+        setAttachment("");
     }
     const onChange = (event) =>{
         const{target:{value}}  = event;
