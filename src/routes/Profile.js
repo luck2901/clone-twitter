@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { authService, dbService } from 'fbase';
 import { useHistory } from "react-router-dom";
 
-const Profile = ({userObj}) =>{
+const Profile = ({refreshUser, userObj}) =>{
     const history = useHistory();
     const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
     const onLogOutClick = () => {
@@ -13,7 +13,7 @@ const Profile = ({userObj}) =>{
         const tweets = await dbService.collection("tweets").where("creatorID","==",userObj.uid).orderBy("creatorAt").get(); 
         //필터링하는 방법
         //orderby를 만드려면 index 생성해야함.
-        tweets.docs.map(doc => doc.data());
+        //tweets.docs.map(doc => doc.data());
     }
     const onChange = (e) =>{
         const{
@@ -27,7 +27,8 @@ const Profile = ({userObj}) =>{
             await userObj.updateProfile({
                 displayName: newDisplayName,
             })
-        }
+        };
+        refreshUser();
     }
     useEffect(() =>{
         getMyTweet();
