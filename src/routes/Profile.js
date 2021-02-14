@@ -7,7 +7,7 @@ const Profile = ({refreshUser, userObj}) =>{
     const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
     const onLogOutClick = () => {
         authService.signOut();
-        history.push("/")
+        history.push("/");
     };
     const getMyTweet = async() =>{
         const tweets = await dbService.collection("tweets").where("creatorID","==",userObj.uid).orderBy("creatorAt").get(); 
